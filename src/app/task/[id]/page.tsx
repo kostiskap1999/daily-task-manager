@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { getTask } from '@/lib/api/task'
 import { Task } from '@/interfaces/task'
 import { styles } from '../../style'
-import { taskStyles } from './taskStyle'
+import { taskStyles } from '../taskStyle'
 
 export default function TaskDetail() {
   const params = useParams()

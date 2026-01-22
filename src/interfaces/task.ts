@@ -5,9 +5,15 @@ export interface Task {
   completed: boolean
 }
 
-export const defaultTask: Task = {
+export const emptyTask: Task = {
     id: 0,
     title: '',
     description: null,
     completed: false
+}
+
+export const defaultTask = {
+    title: 'New Task',
+    description: 'Task description',
+    completed: false,
 }

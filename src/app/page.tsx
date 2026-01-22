@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { getTasks, createTask } from '@/lib/api/task'
+import { getTasks } from '@/lib/api/task'
 import { styles } from './style'
 import { Task } from '@/interfaces/task'
 
@@ -26,19 +26,6 @@ useEffect(() => {
   fetchData()
 }, [])
 
-
-  const handleCreateTask = async () => {
-    try {
-      const newTask = await createTask({
-        title: 'New Task',
-        description: 'Task description',
-        completed: false,
-      })
-      setTasks(prev => [...prev, newTask])
-    } catch (err) {
-      setError('Failed to create task')
-    }
-  }
 
   if (loading) {
     return (
@@ -74,15 +61,14 @@ useEffect(() => {
           </Link>
         ))}
       </div>
-      <button
-        onClick={handleCreateTask}
-        className={styles.createButton}
-      >
-        <svg className={styles.buttonIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-        </svg>
-        <span>Create Task</span>
-      </button>
+      <Link href="/task/new">
+        <button className={styles.createButton}>
+          <svg className={styles.buttonIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          <span>Create Task</span>
+        </button>
+      </Link>
     </div>
   )
 }
