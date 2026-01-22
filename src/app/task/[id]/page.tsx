@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { getTask } from '@/lib/api/task'
 import { Task } from '@/interfaces/task'
 import { styles } from '../../style'
+import { taskStyles } from './taskStyle'
 
 export default function TaskDetail() {
   const params = useParams()
@@ -57,7 +58,7 @@ useEffect(() => {
     return (
       <div className={styles.container}>
         <div className={styles.error}>{error || 'Task not found'}</div>
-        <Link href="/" className="text-blue-600 hover:text-blue-800 mt-4 inline-block">
+        <Link href="/" className={taskStyles.backLink}>
           ← Back to Home
         </Link>
       </div>
@@ -66,24 +67,24 @@ useEffect(() => {
 
   return (
     <div className={styles.container}>
-      <div className="max-w-2xl mx-auto">
-        <Link href="/" className="text-blue-600 hover:text-blue-800 mb-6 inline-block">
+      <div className={taskStyles.contentWrapper}>
+        <Link href="/" className={taskStyles.backLink}>
           ← Back to Home
         </Link>
 
-        <div className={`${styles.taskCard} border-l-4 ${task.completed ? 'border-green-500' : 'border-orange-500'}`}>
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">{task.title}</h1>
+        <div className={`${styles.taskCard} ${taskStyles.taskCard} ${task.completed ? taskStyles.taskCardCompleted : taskStyles.taskCardPending}`}>
+          <h1 className={taskStyles.taskTitle}>{task.title}</h1>
 
           {task.description && (
-            <p className="text-gray-600 mb-6 text-lg leading-relaxed">{task.description}</p>
+            <p className={taskStyles.taskDescription}>{task.description}</p>
           )}
 
-          <div className="flex items-center justify-between">
+          <div className={taskStyles.taskMeta}>
             <span className={`text-lg font-medium ${task.completed ? styles.taskCompleted : styles.taskPending}`}>
               {task.completed ? '✓ Completed' : '⏳ Pending'}
             </span>
 
-            <div className="text-sm text-gray-500">
+            <div className={taskStyles.taskId}>
               Task ID: {task.id}
             </div>
           </div>
