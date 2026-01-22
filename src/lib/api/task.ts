@@ -7,6 +7,13 @@ export async function getTasks(): Promise<Task[]> {
   return response.json();
 }
 
+export async function getTask(id: number): Promise<Task> {
+  const response = await fetch(`/api/task/${id}`)
+  if (!response.ok)
+    throw new Error('Failed to fetch task')
+  return response.json();
+}
+
 export async function createTask(task: Omit<Task, 'id'>): Promise<Task> {
   const response = await fetch('/api/task', {
     method: 'POST',

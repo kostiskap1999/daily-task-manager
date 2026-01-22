@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { getTasks, createTask } from '@/lib/api/task'
 import { styles } from './style'
 import { Task } from '@/interfaces/task'
@@ -60,15 +61,17 @@ useEffect(() => {
       <h1 className={styles.header}>Daily Task Manager</h1>
       <div className={styles.taskList}>
         {tasks.map(task => (
-          <div key={task.id} className={styles.taskCard}>
-            <h2 className={styles.taskTitle}>{task.title}</h2>
-            {task.description && (
-              <p className={styles.taskDescription}>{task.description}</p>
-            )}
-            <span className={task.completed ? styles.taskCompleted : styles.taskPending}>
-              {task.completed ? 'Completed' : 'Pending'}
-            </span>
-          </div>
+          <Link key={task.id} href={`/task/${task.id}`}>
+            <div className={`${styles.taskCard} cursor-pointer hover:scale-105 transition-transform`}>
+              <h2 className={styles.taskTitle}>{task.title}</h2>
+              {task.description && (
+                <p className={styles.taskDescription}>{task.description}</p>
+              )}
+              <span className={task.completed ? styles.taskCompleted : styles.taskPending}>
+                {task.completed ? 'Completed' : 'Pending'}
+              </span>
+            </div>
+          </Link>
         ))}
       </div>
       <button
