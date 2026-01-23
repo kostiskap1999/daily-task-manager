@@ -14,7 +14,26 @@ model Task {
   title       String
   description String?
   completed   Boolean   @default(false)
-  
+  startAt     DateTime  @default(now())
+
+  recurring   Boolean   @default(false)
+  recurrence  RecurrenceRule?
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model RecurrenceRule {
+  id          Int       @id @default(autoincrement())
+
+  taskId      Int       @unique
+  task        Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  frequency   String                // "hourly", "daily", "weekly", "monthly"
+  interval    Int       @default(1) // every N units
+  weekdays    Json?                 // [1, 2, 3, 4, 5, 6, 7] for Monday through Sunday
+  endsAt      DateTime?
+
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }

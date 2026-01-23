@@ -4,13 +4,15 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createTask } from '@/lib/api/task'
-import { emptyTask, Task } from '@/interfaces/task'
+import { Prisma } from '@prisma/client'
 import { styles } from '../../style'
 import { taskStyles } from '../taskStyle'
+import { emptyTask } from '@/interfaces/task'
 
 export default function NewTaskPage() {
   const router = useRouter()
-  const [task, setTask] = useState<Omit<Task, 'id'>>(emptyTask)
+  const [task, setTask] = useState<Prisma.TaskCreateInput>(emptyTask)
+  const [recurrence, setRecurrence] = useState<Prisma.RecurrenceRuleCreateWithoutTaskInput | null>(null)
   const [editingTitle, setEditingTitle] = useState(false)
   const [editingDescription, setEditingDescription] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -39,6 +41,28 @@ export default function NewTaskPage() {
     setTask(prev => ({ ...prev, completed: !prev.completed }))
   }
 
+  const handleStartAtChange = (value: string) => {
+    setTask(prev => ({ ...prev, startAt: new Date(value) }))
+  }
+
+  const handleRecurringToggle = () => {
+    setTask(prev => ({ ...prev, recurring: !prev.recurring }))
+    if (!task.recurring) {
+      setRecurrence({
+        frequency: 'daily',
+        interval: 1,
+        weekdays: undefined,
+        endsAt: undefined,
+      })
+    } else {
+      setRecurrence(null)
+    }
+  }
+
+  const handleRecurrenceChange = (field: string, value: any) => {
+    setRecurrence(prev => prev ? { ...prev, [field]: value } : null)
+  }
+
   const handleSubmit = async () => {
     if (!task.title.trim()) {
       setError('Task title is required')
@@ -48,7 +72,11 @@ export default function NewTaskPage() {
     try {
       setLoading(true)
       setError(null)
-      const newTask = await createTask(task)
+      const taskData = { ...task }
+      if (task.recurring && recurrence) {
+        taskData.recurrence = { create: recurrence }
+      }
+      const newTask = await createTask(taskData)
       router.push(`/task/${newTask.id}`)
     } catch (err) {
       setError('Failed to create task')
@@ -126,6 +154,93 @@ export default function NewTaskPage() {
               </button>
             </div>
           </div>
+
+          {/* Start At Section */}
+          <div className="text-center">
+            <div className="inline-flex items-center space-x-4">
+              <span className="text-gray-400 text-lg">Start At:</span>
+              <input
+                type="datetime-local"
+                value={task.startAt ? new Date(task.startAt).toISOString().slice(0, 16) : ''}
+                onChange={(e) => handleStartAtChange(e.target.value)}
+                className="bg-gray-800 border-2 border-red-500 rounded-lg p-2 text-gray-100 focus:outline-none focus:border-red-400"
+              />
+            </div>
+          </div>
+
+          {/* Recurring Section */}
+          <div className="text-center">
+            <div className="inline-flex items-center space-x-4">
+              <span className="text-gray-400 text-lg">Recurring:</span>
+              <button
+                onClick={handleRecurringToggle}
+                className={`px-6 py-3 rounded-lg font-medium text-lg transition-all ${
+                  task.recurring
+                    ? 'bg-red-600 hover:bg-red-700 text-white'
+                    : 'bg-gray-700 hover:bg-red-600 text-gray-300 hover:text-white'
+                }`}
+              >
+                {task.recurring ? '✓ Yes' : '✗ No'}
+              </button>
+            </div>
+          </div>
+
+          {/* Recurrence Details */}
+          {task.recurring && recurrence && (
+            <div className="max-w-2xl mx-auto space-y-4">
+              <div className="text-center">
+                <span className="text-gray-400 text-lg">Frequency:</span>
+                <select
+                  value={recurrence.frequency}
+                  onChange={(e) => handleRecurrenceChange('frequency', e.target.value)}
+                  className="ml-4 bg-gray-800 border-2 border-red-500 rounded-lg p-2 text-gray-100 focus:outline-none focus:border-red-400"
+                >
+                  <option value="hourly">Hourly</option>
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                </select>
+              </div>
+              <div className="text-center">
+                <span className="text-gray-400 text-lg">Interval:</span>
+                <input
+                  type="number"
+                  min="1"
+                  value={recurrence.interval}
+                  onChange={(e) => handleRecurrenceChange('interval', parseInt(e.target.value))}
+                  className="ml-4 bg-gray-800 border-2 border-red-500 rounded-lg p-2 text-gray-100 focus:outline-none focus:border-red-400 w-20"
+                />
+              </div>
+              {recurrence.frequency === 'weekly' && (
+                <div className="text-center">
+                  <span className="text-gray-400 text-lg">Weekdays:</span>
+                  <input
+                    type="text"
+                    placeholder="e.g., [1,3,5]"
+                    value={recurrence.weekdays ? JSON.stringify(recurrence.weekdays) : ''}
+                    onChange={(e) => {
+                      try {
+                        const val = e.target.value ? JSON.parse(e.target.value) : undefined
+                        handleRecurrenceChange('weekdays', val)
+                      } catch {
+                        // invalid JSON, ignore
+                      }
+                    }}
+                    className="ml-4 bg-gray-800 border-2 border-red-500 rounded-lg p-2 text-gray-100 focus:outline-none focus:border-red-400"
+                  />
+                </div>
+              )}
+              <div className="text-center">
+                <span className="text-gray-400 text-lg">Ends At:</span>
+                <input
+                  type="datetime-local"
+                  value={recurrence.endsAt ? new Date(recurrence.endsAt).toISOString().slice(0, 16) : ''}
+                  onChange={(e) => handleRecurrenceChange('endsAt', e.target.value ? new Date(e.target.value) : null)}
+                  className="ml-4 bg-gray-800 border-2 border-red-500 rounded-lg p-2 text-gray-100 focus:outline-none focus:border-red-400"
+                />
+              </div>
+            </div>
+          )}
 
           {/* Error Display */}
           {error && (

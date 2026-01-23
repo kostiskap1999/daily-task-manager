@@ -1,19 +1,17 @@
-export interface Task {
-  id: number
-  title: string
-  description?: string | null
-  completed: boolean
-}
+import { Prisma } from '@prisma/client'
 
-export const emptyTask: Task = {
-    id: 0,
+export const emptyTask: Prisma.TaskCreateInput = {
     title: '',
     description: null,
-    completed: false
+    completed: false,
+    startAt: new Date(),
+    recurring: false,
 }
 
-export const defaultTask = {
+export const defaultTask: Prisma.TaskCreateInput = {
     title: 'New Task',
     description: 'Task description',
     completed: false,
+    startAt: new Date(),
+    recurring: false,
 }

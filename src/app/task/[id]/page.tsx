@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { getTask } from '@/lib/api/task'
-import { Task } from '@/interfaces/task'
 import { styles } from '../../style'
 import { taskStyles } from '../taskStyle'
+import { Task } from '@prisma/client'
 
 export default function TaskDetail() {
   const params = useParams()
