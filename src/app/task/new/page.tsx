@@ -29,14 +29,6 @@ export default function NewTaskPage() {
     setTask(prev => ({ ...prev, description: value }))
   }
 
-  const handleTitleSubmit = () => {
-    setEditingTitle(false)
-  }
-
-  const handleDescriptionSubmit = () => {
-    setEditingDescription(false)
-  }
-
   const handleStatusToggle = () => {
     setTask(prev => ({ ...prev, completed: !prev.completed }))
   }
@@ -100,8 +92,8 @@ export default function NewTaskPage() {
                 type="text"
                 value={task.title}
                 onChange={(e) => handleTitleChange(e.target.value)}
-                onBlur={handleTitleSubmit}
-                onKeyPress={(e) => e.key === 'Enter' && handleTitleSubmit()}
+                onBlur={() => setEditingTitle(false)}
+                onKeyPress={(e) => e.key === 'Enter' && setEditingTitle(false)}
                 className="text-5xl font-bold bg-transparent border-b-2 border-red-500 text-gray-100 text-center focus:outline-none focus:border-red-400 w-full"
                 autoFocus
                 placeholder="Enter task title..."
@@ -122,7 +114,7 @@ export default function NewTaskPage() {
               <textarea
                 value={task.description || ''}
                 onChange={(e) => handleDescriptionChange(e.target.value)}
-                onBlur={handleDescriptionSubmit}
+                onBlur={() => setEditingDescription(false)}
                 className="w-full bg-gray-800 border-2 border-red-500 rounded-lg p-4 text-gray-100 text-lg leading-relaxed focus:outline-none focus:border-red-400 resize-none"
                 rows={6}
                 placeholder="Enter task description..."

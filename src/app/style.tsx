@@ -11,4 +11,6 @@ export const styles = {
   buttonIcon: 'w-5 h-5',
   loading: 'text-center text-gray-400 mt-8',
   error: 'text-center text-red-400 mt-8',
+  arrow: 'text-red-500 hover:text-red-400 text-2xl',
+  date: 'text-gray-100 text-xl font-medium'
 };

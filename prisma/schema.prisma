@@ -15,6 +15,7 @@ model Task {
   description String?
   completed   Boolean   @default(false)
   startAt     DateTime  @default(now())
+  endsAt      DateTime?  @default(now())
 
   recurring   Boolean   @default(false)
   recurrence  RecurrenceRule?

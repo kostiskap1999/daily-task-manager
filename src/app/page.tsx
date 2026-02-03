@@ -27,12 +27,9 @@ export default function Home() {
     fetchData()
   }, [])
 
-  const handlePrevDay = () => {
-    setSelectedDate(prev => new Date(prev.getTime() - 24 * 60 * 60 * 1000))
-  }
-
-  const handleNextDay = () => {
-    setSelectedDate(prev => new Date(prev.getTime() + 24 * 60 * 60 * 1000))
+  const handleDayChange = (modifier: number) => {
+    const msInDay = 24 * 60 * 60 * 1000
+    setSelectedDate(prev => new Date(prev.getTime() + modifier * msInDay))
   }
 
   const filteredTasks = tasks.filter(task => {
@@ -60,13 +57,17 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <h1 className={styles.header}>Daily Task Manager</h1>
+      
+      {/* Date */}
       <div className="flex items-center justify-center space-x-4 mb-8">
-        <button onClick={handlePrevDay} className="text-red-500 hover:text-red-400 text-2xl">←</button>
-        <span className="text-gray-100 text-xl font-medium">
+        <button onClick={() => handleDayChange(-1)} className={styles.arrow}>←</button>
+        <span className={styles.date}>
           {selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
         </span>
-        <button onClick={handleNextDay} className="text-red-500 hover:text-red-400 text-2xl">→</button>
+        <button onClick={() => handleDayChange(1)} className={styles.arrow}>→</button>
       </div>
+
+      {/* Task List */}
       <div className={styles.taskList}>
         {filteredTasks.map(task => (
           <Link key={task.id} href={`/task/${task.id}`}>
@@ -82,6 +83,8 @@ export default function Home() {
           </Link>
         ))}
       </div>
+
+      {/* Create New */}
       <Link href="/task/new">
         <button className={styles.createButton}>
           <svg className={styles.buttonIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
