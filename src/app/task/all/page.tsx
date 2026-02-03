@@ -5,6 +5,7 @@ import { getTasks } from '@/lib/api/task'
 import { Task } from '@prisma/client'
 import { globalStyles } from '@/app/style'
 import TaskButton from '@/app/components/TaskButton'
+import PageWrapper from '@/app/components/PageWrapper'
 
 interface TasksByDay {
   [key: string]: Task[]
@@ -56,26 +57,10 @@ export default function AllTasks() {
     })
   }
 
-  if (loading) {
-    return (
-      <div className="pt-20 pl-8 pr-8">
-        <div className="text-center text-gray-500">Loading tasks...</div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="pt-20 pl-8 pr-8">
-        <div className="text-center text-red-500">{error}</div>
-      </div>
-    )
-  }
-
   const groupedTasks = groupTasksByDay()
 
   return (
-    <div className={globalStyles.container}>
+    <PageWrapper loading={loading} error={error} className={globalStyles.container}>
       <h1 className="text-4xl font-bold mb-8">All Tasks</h1>
 
       {groupedTasks.length === 0 ? (
@@ -96,6 +81,6 @@ export default function AllTasks() {
           ))}
         </div>
       )}
-    </div>
+    </PageWrapper>
   )
 }

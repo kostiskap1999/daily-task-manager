@@ -7,6 +7,7 @@ import { getTask } from '@/lib/api/task'
 import { globalStyles } from '../../style'
 import { taskStyles } from '../taskStyle'
 import { Task } from '@prisma/client'
+import PageWrapper from '@/app/components/PageWrapper'
 
 export default function TaskDetail() {
   const params = useParams()
@@ -38,14 +39,6 @@ useEffect(() => {
   fetchTask()
 }, [id])
 
-  if (loading) {
-    return (
-      <div className={globalStyles.container}>
-        <div className={globalStyles.loading}>Loading task...</div>
-      </div>
-    )
-  }
-
   if (!id || isNaN(id)) {
     return (
       <div className={globalStyles.container}>
@@ -54,10 +47,10 @@ useEffect(() => {
     )
   }
 
-  if (error || !task) {
+  if (!task) {
     return (
       <div className={globalStyles.container}>
-        <div className={globalStyles.error}>{error || 'Task not found'}</div>
+        <div className={globalStyles.error}>{'Task not found'}</div>
         <Link href="/" className={taskStyles.backLink}>
           ← Back to Home
         </Link>
@@ -66,7 +59,7 @@ useEffect(() => {
   }
 
   return (
-    <div className={globalStyles.container}>
+    <PageWrapper loading={loading} error={error} className={globalStyles.container}>
       <div className={taskStyles.contentWrapper}>
         <Link href="/" className={taskStyles.backLink}>
           ← Back to Home
@@ -90,6 +83,6 @@ useEffect(() => {
           </div>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   )
 }

@@ -6,6 +6,7 @@ import { getTasks } from '@/lib/api/task'
 import { globalStyles } from './style'
 import { Task } from '@prisma/client'
 import TaskButton from './components/TaskButton'
+import PageWrapper from './components/PageWrapper'
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -38,25 +39,8 @@ export default function Home() {
     return taskDate.toDateString() === selectedDate.toDateString()
   })
 
-
-  if (loading) {
-    return (
-      <div className={globalStyles.container}>
-        <div className={globalStyles.loading}>Loading tasks...</div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className={globalStyles.container}>
-        <div className={globalStyles.error}>{error}</div>
-      </div>
-    )
-  }
-
   return (
-    <div className={globalStyles.container}>
+    <PageWrapper loading={loading} error={error} className={globalStyles.container}>
       <h1 className={globalStyles.header}>Daily Task Manager</h1>
       
       {/* Date */}
@@ -84,6 +68,6 @@ export default function Home() {
           <span>Create Task</span>
         </button>
       </Link>
-    </div>
+    </PageWrapper>
   )
 }
