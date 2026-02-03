@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { getTasks } from '@/lib/api/task'
-import { styles } from './style'
+import { globalStyles } from './style'
 import { Task } from '@prisma/client'
+import TaskButton from './components/TaskButton'
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -40,54 +41,44 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className={styles.container}>
-        <div className={styles.loading}>Loading tasks...</div>
+      <div className={globalStyles.container}>
+        <div className={globalStyles.loading}>Loading tasks...</div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className={styles.container}>
-        <div className={styles.error}>{error}</div>
+      <div className={globalStyles.container}>
+        <div className={globalStyles.error}>{error}</div>
       </div>
     )
   }
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.header}>Daily Task Manager</h1>
+    <div className={globalStyles.container}>
+      <h1 className={globalStyles.header}>Daily Task Manager</h1>
       
       {/* Date */}
       <div className="flex items-center justify-center space-x-4 mb-8">
-        <button onClick={() => handleDayChange(-1)} className={styles.arrow}>←</button>
-        <span className={styles.date}>
+        <button onClick={() => handleDayChange(-1)} className={globalStyles.arrow}>←</button>
+        <span className={globalStyles.date}>
           {selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
         </span>
-        <button onClick={() => handleDayChange(1)} className={styles.arrow}>→</button>
+        <button onClick={() => handleDayChange(1)} className={globalStyles.arrow}>→</button>
       </div>
 
       {/* Task List */}
-      <div className={styles.taskList}>
+      <div className={globalStyles.taskList}>
         {filteredTasks.map(task => (
-          <Link key={task.id} href={`/task/${task.id}`}>
-            <div className={`${styles.taskCard} cursor-pointer hover:scale-105 transition-transform`}>
-              <h2 className={styles.taskTitle}>{task.title}</h2>
-              {task.description && (
-                <p className={styles.taskDescription}>{task.description}</p>
-              )}
-              <span className={task.completed ? styles.taskCompleted : styles.taskPending}>
-                {task.completed ? 'Completed' : 'Pending'}
-              </span>
-            </div>
-          </Link>
+          <TaskButton key={task.id} task={task} />
         ))}
       </div>
 
       {/* Create New */}
       <Link href="/task/new">
-        <button className={styles.createButton}>
-          <svg className={styles.buttonIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button className={globalStyles.createButton}>
+          <svg className={globalStyles.buttonIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
           <span>Create Task</span>

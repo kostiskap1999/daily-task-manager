@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createTask } from '@/lib/api/task'
 import { Prisma } from '@prisma/client'
-import { styles } from '../../style'
+import { globalStyles } from '../../style'
 import { taskStyles } from '../taskStyle'
 import { emptyTask } from '@/interfaces/task'
 
@@ -78,7 +78,7 @@ export default function NewTaskPage() {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={globalStyles.container}>
       <div className="max-w-4xl mx-auto py-12">
         <Link href="/" className={taskStyles.backLink}>
           ← Back to Home
@@ -237,7 +237,7 @@ export default function NewTaskPage() {
           {/* Error Display */}
           {error && (
             <div className="text-center">
-              <div className={styles.error}>{error}</div>
+              <div className={globalStyles.error}>{error}</div>
             </div>
           )}
 
@@ -246,9 +246,9 @@ export default function NewTaskPage() {
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className={`${styles.createButton} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`${globalStyles.createButton} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              <svg className={styles.buttonIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className={globalStyles.buttonIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
               <span>{loading ? 'Creating Task...' : 'Create Task'}</span>

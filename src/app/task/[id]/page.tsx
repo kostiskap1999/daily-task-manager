@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { getTask } from '@/lib/api/task'
-import { styles } from '../../style'
+import { globalStyles } from '../../style'
 import { taskStyles } from '../taskStyle'
 import { Task } from '@prisma/client'
 
@@ -40,24 +40,24 @@ useEffect(() => {
 
   if (loading) {
     return (
-      <div className={styles.container}>
-        <div className={styles.loading}>Loading task...</div>
+      <div className={globalStyles.container}>
+        <div className={globalStyles.loading}>Loading task...</div>
       </div>
     )
   }
 
   if (!id || isNaN(id)) {
     return (
-      <div className={styles.container}>
-        <div className={styles.error}>Invalid task ID</div>
+      <div className={globalStyles.container}>
+        <div className={globalStyles.error}>Invalid task ID</div>
       </div>
     )
   }
 
   if (error || !task) {
     return (
-      <div className={styles.container}>
-        <div className={styles.error}>{error || 'Task not found'}</div>
+      <div className={globalStyles.container}>
+        <div className={globalStyles.error}>{error || 'Task not found'}</div>
         <Link href="/" className={taskStyles.backLink}>
           ← Back to Home
         </Link>
@@ -66,13 +66,13 @@ useEffect(() => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={globalStyles.container}>
       <div className={taskStyles.contentWrapper}>
         <Link href="/" className={taskStyles.backLink}>
           ← Back to Home
         </Link>
 
-        <div className={`${styles.taskCard} ${taskStyles.taskCard} ${task.completed ? taskStyles.taskCardCompleted : taskStyles.taskCardPending}`}>
+        <div className={`${globalStyles.taskCard} ${taskStyles.taskCard} ${task.completed ? taskStyles.taskCardCompleted : taskStyles.taskCardPending}`}>
           <h1 className={taskStyles.taskTitle}>{task.title}</h1>
 
           {task.description && (
@@ -80,7 +80,7 @@ useEffect(() => {
           )}
 
           <div className={taskStyles.taskMeta}>
-            <span className={`text-lg font-medium ${task.completed ? styles.taskCompleted : styles.taskPending}`}>
+            <span className={`text-lg font-medium ${task.completed ? globalStyles.taskCompleted : globalStyles.taskPending}`}>
               {task.completed ? '✓ Completed' : '⏳ Pending'}
             </span>
 

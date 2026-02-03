@@ -1,4 +1,4 @@
-export const styles = {
+export const globalStyles = {
   container: 'min-h-screen bg-gradient-to-br from-gray-900 to-black p-8',
   header: 'text-4xl font-bold text-gray-100 mb-8 text-center',
   taskList: 'max-w-2xl mx-auto space-y-4',

@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { getTasks } from '@/lib/api/task'
 import { Task } from '@prisma/client'
+import { globalStyles } from '@/app/style'
+import TaskButton from '@/app/components/TaskButton'
 
 interface TasksByDay {
   [key: string]: Task[]
@@ -74,7 +75,7 @@ export default function AllTasks() {
   const groupedTasks = groupTasksByDay()
 
   return (
-    <div className="pt-20 pl-8 pr-8 pb-8">
+    <div className={globalStyles.container}>
       <h1 className="text-4xl font-bold mb-8">All Tasks</h1>
 
       {groupedTasks.length === 0 ? (
@@ -88,23 +89,7 @@ export default function AllTasks() {
               </h2>
               <div className="space-y-3">
                 {dayTasks.map(task => (
-                  <Link key={task.id} href={`/task/${task.id}`}>
-                    <div className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-blue-500">
-                      <h3 className="text-lg font-semibold text-gray-800">{task.title}</h3>
-                      {task.description && (
-                        <p className="text-gray-600 text-sm mt-1">{task.description}</p>
-                      )}
-                      <span
-                        className={`inline-block mt-2 px-3 py-1 rounded text-sm font-medium ${
-                          task.completed
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}
-                      >
-                        {task.completed ? 'Completed' : 'Pending'}
-                      </span>
-                    </div>
-                  </Link>
+                  <TaskButton key={task.id} task={task} />
                 ))}
               </div>
             </div>
