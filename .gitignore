@@ -16,4 +16,4 @@ next-env.d.ts
 /src/generated/prisma
 /.vscode/
 /database
-package-lock.json
+/package-lock.json
